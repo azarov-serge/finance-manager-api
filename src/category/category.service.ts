@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Category } from '@prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CategoryDto, NewCategoryDto } from './dto/category.dto';
 
@@ -7,13 +6,13 @@ import { CategoryDto, NewCategoryDto } from './dto/category.dto';
 export class CategoryService {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async create(dto: NewCategoryDto): Promise<Category> {
+	async create(dto: NewCategoryDto): Promise<CategoryDto> {
 		const category = await this.prisma.category.create({ data: dto });
 
-		return category;
+		return CategoryDto.adaptToDto(category);
 	}
 
-	async update(dto: CategoryDto): Promise<Category> {
+	async update(dto: CategoryDto): Promise<CategoryDto> {
 		const category = await this.prisma.category.update({
 			where: {
 				id: dto.id,
@@ -21,19 +20,19 @@ export class CategoryService {
 			data: dto,
 		});
 
-		return category;
+		return CategoryDto.adaptToDto(category);
 	}
 
-	async findById(id: string): Promise<Category> {
+	async findById(id: string): Promise<CategoryDto> {
 		const category = await this.prisma.category.findUnique({ where: { id } });
 
-		return category;
+		return CategoryDto.adaptToDto(category);
 	}
 
-	async getList(userId: string): Promise<Category[]> {
-		const categorys = await this.prisma.category.findMany({ where: { userId } });
+	async getList(userId: string): Promise<CategoryDto[]> {
+		const categories = await this.prisma.category.findMany({ where: { userId } });
 
-		return categorys;
+		return categories.map(CategoryDto.adaptToDto);
 	}
 
 	async delete(id: string): Promise<boolean> {

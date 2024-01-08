@@ -12,7 +12,6 @@ import {
 	UsePipes,
 	ValidationPipe,
 } from '@nestjs/common';
-import { Category } from '@prisma/client';
 
 import { AccessTokenGuard } from '@common/guards/access-token.guard';
 
@@ -27,7 +26,7 @@ export class CategoryController {
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
 	@Post('create')
-	async create(@Body() dto: NewCategoryDto): Promise<Category> {
+	async create(@Body() dto: NewCategoryDto): Promise<CategoryDto> {
 		try {
 			const category = await this.categoryService.create(dto);
 
@@ -40,7 +39,7 @@ export class CategoryController {
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
 	@Patch('update')
-	async update(@Body() dto: CategoryDto): Promise<Category> {
+	async update(@Body() dto: CategoryDto): Promise<CategoryDto> {
 		try {
 			const category = this.categoryService.findById(dto.id);
 
@@ -48,7 +47,9 @@ export class CategoryController {
 				throw new NotFoundException(CATEGORY_NOT_FOUND);
 			}
 
-			return await this.categoryService.update(dto);
+			const updatedCategory = await this.categoryService.update(dto);
+
+			return updatedCategory;
 		} catch (error: any) {
 			if (error instanceof NotFoundException) {
 				throw new NotFoundException(CATEGORY_NOT_FOUND);
@@ -60,9 +61,9 @@ export class CategoryController {
 
 	@UseGuards(AccessTokenGuard)
 	@Get(':id')
-	async get(@Param('id') id: string): Promise<Category> {
+	async get(@Param('id') id: string): Promise<CategoryDto> {
 		try {
-			const category = this.categoryService.findById(id);
+			const category = await this.categoryService.findById(id);
 
 			if (!category) {
 				throw new NotFoundException(CATEGORY_NOT_FOUND);
@@ -80,7 +81,7 @@ export class CategoryController {
 
 	@UseGuards(AccessTokenGuard)
 	@Get('get-list/:userId')
-	async getList(@Param('userId') userId: string): Promise<Category[]> {
+	async getList(@Param('userId') userId: string): Promise<CategoryDto[]> {
 		try {
 			const categorys = await this.categoryService.getList(userId);
 

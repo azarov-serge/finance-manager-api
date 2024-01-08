@@ -1,13 +1,10 @@
 import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { CategoryDto } from '../../category/dto/category.dto';
 
 export class TransactionDto {
 	@IsNotEmpty()
 	@IsString()
 	id: string;
-
-	@IsNotEmpty()
-	@IsString()
-	userId: string;
 
 	@IsNotEmpty()
 	@IsString()
@@ -17,9 +14,7 @@ export class TransactionDto {
 	@IsNumber()
 	price: number;
 
-	@IsOptional()
-	@IsString()
-	categoryId: string | null;
+	category: CategoryDto | null;
 }
 
 export class NewTransactionDto {

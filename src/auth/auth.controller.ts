@@ -7,6 +7,7 @@ import {
 	Req,
 	UsePipes,
 	ValidationPipe,
+	HttpCode,
 } from '@nestjs/common';
 import { Request } from 'express';
 
@@ -23,6 +24,7 @@ import { RefreshTokenGuard } from '@common/guards/refresh-token.guard';
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
+	@HttpCode(200)
 	@UsePipes(new ValidationPipe())
 	@Post('sign-in')
 	async signIn(
@@ -31,6 +33,7 @@ export class AuthController {
 		return await this.authService.signIn(dto);
 	}
 
+	@HttpCode(200)
 	@UsePipes(new ValidationPipe())
 	@Post('sign-up')
 	async signUp(
@@ -39,6 +42,7 @@ export class AuthController {
 		return await this.authService.signUp(dto);
 	}
 
+	@HttpCode(200)
 	@UseGuards(AccessTokenGuard)
 	@Post('sign-out')
 	async signOut(@Body('userId') userId: string): Promise<void> {

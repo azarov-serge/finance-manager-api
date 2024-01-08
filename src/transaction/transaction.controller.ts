@@ -12,7 +12,6 @@ import {
 	UsePipes,
 	ValidationPipe,
 } from '@nestjs/common';
-import { Transaction } from '@prisma/client';
 import { AccessTokenGuard } from '@common/guards/access-token.guard';
 
 import { TRANSACTION_NOT_FOUND } from './transaction.constants';
@@ -26,7 +25,7 @@ export class TransactionController {
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
 	@Post('create')
-	async create(@Body() dto: NewTransactionDto): Promise<Transaction> {
+	async create(@Body() dto: NewTransactionDto): Promise<TransactionDto> {
 		try {
 			const transaction = await this.transactionService.create(dto);
 
@@ -39,7 +38,7 @@ export class TransactionController {
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
 	@Patch('update')
-	async update(@Body() dto: TransactionDto): Promise<Transaction> {
+	async update(@Body() dto: TransactionDto): Promise<TransactionDto> {
 		try {
 			const transaction = this.transactionService.findById(dto.id);
 
@@ -58,7 +57,7 @@ export class TransactionController {
 	}
 	@UseGuards(AccessTokenGuard)
 	@Get(':id')
-	async get(@Param('id') id: string): Promise<Transaction> {
+	async get(@Param('id') id: string): Promise<TransactionDto> {
 		try {
 			const transaction = this.transactionService.findById(id);
 
@@ -78,7 +77,7 @@ export class TransactionController {
 
 	@UseGuards(AccessTokenGuard)
 	@Get('get-list/:userId')
-	async getList(@Param('userId') userId: string): Promise<Transaction[]> {
+	async getList(@Param('userId') userId: string): Promise<TransactionDto[]> {
 		try {
 			const transactions = await this.transactionService.getList(userId);
 
