@@ -30,7 +30,12 @@ export class CategoryService {
 	}
 
 	async getList(userId: string): Promise<CategoryDto[]> {
-		const categories = await this.prisma.category.findMany({ where: { userId } });
+		const categories = await this.prisma.category.findMany({
+			where: { userId },
+			orderBy: {
+				createdAt: 'asc',
+			},
+		});
 
 		return categories.map(CategoryDto.adaptToDto);
 	}

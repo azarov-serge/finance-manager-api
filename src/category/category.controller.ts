@@ -25,9 +25,10 @@ export class CategoryController {
 
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
-	@Post('create')
+	@Post('')
 	async create(@Body() dto: NewCategoryDto): Promise<CategoryDto> {
 		try {
+			console.log({ dto });
 			const category = await this.categoryService.create(dto);
 
 			return category;
@@ -38,7 +39,7 @@ export class CategoryController {
 
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
-	@Patch('update')
+	@Patch('')
 	async update(@Body() dto: CategoryDto): Promise<CategoryDto> {
 		try {
 			const category = this.categoryService.findById(dto.id);
