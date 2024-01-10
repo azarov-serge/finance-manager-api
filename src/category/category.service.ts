@@ -40,8 +40,13 @@ export class CategoryService {
 		return categories.map(CategoryDto.adaptToDto);
 	}
 
-	async delete(id: string): Promise<boolean> {
-		await this.prisma.category.delete({ where: { id } });
+	async delete(ids: string[]): Promise<boolean> {
+		if (ids.length === 1) {
+			const id = ids[0];
+			await this.prisma.category.delete({ where: { id } });
+		} else {
+			await this.prisma.category.deleteMany({ where: { id: { in: ids } } });
+		}
 
 		return true;
 	}
