@@ -17,7 +17,7 @@ import { AccessTokenGuard } from '@common/guards/access-token.guard';
 
 import { CategoryService } from './category.service';
 import { CATEGORY_NOT_FOUND } from './category.constants';
-import { CategoryDto, NewCategoryDto } from './dto/category.dto';
+import { CategoryDto, DeletedCategoryDto, NewCategoryDto } from './dto/category.dto';
 
 @Controller('category')
 export class CategoryController {
@@ -28,7 +28,6 @@ export class CategoryController {
 	@Post('')
 	async create(@Body() dto: NewCategoryDto): Promise<CategoryDto> {
 		try {
-			console.log({ dto });
 			const category = await this.categoryService.create(dto);
 
 			return category;
@@ -83,6 +82,7 @@ export class CategoryController {
 	@UseGuards(AccessTokenGuard)
 	@Get('get-list/:userId')
 	async getList(@Param('userId') userId: string): Promise<CategoryDto[]> {
+		// throw new InternalServerErrorException();
 		try {
 			const categorys = await this.categoryService.getList(userId);
 
@@ -92,11 +92,12 @@ export class CategoryController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
-	@Delete(':id')
-	async delete(@Param('id') id: string): Promise<boolean> {
+	@Delete('')
+	async delete(@Body() dto: DeletedCategoryDto): Promise<boolean> {
 		try {
-			const isDeleted = await this.categoryService.delete(id);
+			const isDeleted = await this.categoryService.delete(dto.ids);
 
 			return isDeleted;
 		} catch (error: any) {

@@ -1,5 +1,5 @@
 import { Category } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 const adaptToDto = (category: Category): CategoryDto => {
 	const dto = { ...category };
@@ -39,4 +39,11 @@ export class NewCategoryDto {
 	@IsNotEmpty()
 	@IsString()
 	name: string;
+}
+
+export class DeletedCategoryDto {
+	@IsArray()
+	@IsString({ each: true })
+	@ArrayNotEmpty()
+	ids: string[];
 }
