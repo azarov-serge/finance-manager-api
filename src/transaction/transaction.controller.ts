@@ -16,7 +16,7 @@ import { AccessTokenGuard } from '@common/guards/access-token.guard';
 
 import { TRANSACTION_NOT_FOUND } from './transaction.constants';
 import { TransactionService } from './transaction.service';
-import { TransactionDto, NewTransactionDto } from './dto/transaction.dto';
+import { TransactionDto, NewTransactionDto, DeletedTransactionyDto } from './dto/transaction.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -24,7 +24,7 @@ export class TransactionController {
 
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
-	@Post('create')
+	@Post('')
 	async create(@Body() dto: NewTransactionDto): Promise<TransactionDto> {
 		try {
 			const transaction = await this.transactionService.create(dto);
@@ -37,7 +37,7 @@ export class TransactionController {
 
 	@UsePipes(new ValidationPipe())
 	@UseGuards(AccessTokenGuard)
-	@Patch('update')
+	@Patch('')
 	async update(@Body() dto: TransactionDto): Promise<TransactionDto> {
 		try {
 			const transaction = this.transactionService.findById(dto.id);
@@ -88,10 +88,10 @@ export class TransactionController {
 	}
 
 	@UseGuards(AccessTokenGuard)
-	@Delete(':id')
-	async delete(@Param('id') id: string): Promise<boolean> {
+	@Delete('')
+	async delete(@Body() dto: DeletedTransactionyDto): Promise<boolean> {
 		try {
-			const isDeleted = await this.transactionService.delete(id);
+			const isDeleted = await this.transactionService.delete(dto.ids);
 
 			return isDeleted;
 		} catch (error: any) {
