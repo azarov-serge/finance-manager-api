@@ -22,7 +22,7 @@ export class TransactionService {
 			data: {
 				name: dto.name,
 				price: dto.price,
-				categoryId: dto.category.id,
+				categoryId: dto.category?.id || null,
 			},
 		});
 
@@ -41,14 +41,22 @@ export class TransactionService {
 	async getList(userId: string): Promise<TransactionDto[]> {
 		const transactions = await this.prisma.transaction.findMany({
 			where: { userId },
+			orderBy: {
+				createdAt: 'asc',
+			},
 			select,
 		});
 
 		return transactions;
 	}
 
-	async delete(id: string): Promise<boolean> {
-		await this.prisma.transaction.delete({ where: { id } });
+	async delete(ids: string[]): Promise<boolean> {
+		if (ids.length === 1) {
+			const id = ids[0];
+			await this.prisma.transaction.delete({ where: { id } });
+		} else {
+			await this.prisma.transaction.deleteMany({ where: { id: { in: ids } } });
+		}
 
 		return true;
 	}

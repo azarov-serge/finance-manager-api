@@ -1,6 +1,6 @@
 # API for Finance Manager
 
-## v1.0.7
+## v1.0.8
 
 Релализованы сервисы:
 

@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import {
+	IsNotEmpty,
+	IsString,
+	IsNumber,
+	IsOptional,
+	IsArray,
+	ArrayNotEmpty,
+} from 'class-validator';
 import { CategoryDto } from '../../category/dto/category.dto';
 
 export class TransactionDto {
@@ -33,4 +40,11 @@ export class NewTransactionDto {
 	@IsOptional()
 	@IsString()
 	categoryId: string | null;
+}
+
+export class DeletedTransactionyDto {
+	@IsArray()
+	@IsString({ each: true })
+	@ArrayNotEmpty()
+	ids: string[];
 }
